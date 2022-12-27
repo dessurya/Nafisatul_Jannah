@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 27 Des 2022 pada 05.18
+-- Waktu pembuatan: 27 Des 2022 pada 06.58
 -- Versi server: 10.4.24-MariaDB
 -- Versi PHP: 8.1.6
 
@@ -62,7 +62,28 @@ CREATE TABLE `pendaftaran` (
 --
 
 INSERT INTO `pendaftaran` (`id`, `nama`, `email`, `tanggal_lahir`, `alamat`, `event`, `event_date`) VALUES
-(1, 'asdasd', 'asdasd', '2022-12-01', 'asdsad', 'asdasd', '2022-12-01');
+(1, 'asdasd', 'asdasd', '2022-12-01', 'asdsad', 'asdasd', '2022-12-01'),
+(2, 'Joseph', 'JOSH@MAIL.TRY', '2022-12-27', 'JL TEST', 'dasda', '2022-12-02');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_admin`
+--
+
+CREATE TABLE `tb_admin` (
+  `id` int(11) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `nama` varchar(200) NOT NULL,
+  `password` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_admin`
+--
+
+INSERT INTO `tb_admin` (`id`, `email`, `nama`, `password`) VALUES
+(1, 'asd@asd.com', 'asd', 'asdasd');
 
 --
 -- Indexes for dumped tables
@@ -81,6 +102,12 @@ ALTER TABLE `pendaftaran`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `tb_admin`
+--
+ALTER TABLE `tb_admin`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -94,6 +121,12 @@ ALTER TABLE `event`
 -- AUTO_INCREMENT untuk tabel `pendaftaran`
 --
 ALTER TABLE `pendaftaran`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_admin`
+--
+ALTER TABLE `tb_admin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
