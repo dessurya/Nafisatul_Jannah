@@ -9,8 +9,13 @@
 
     include('open-conn.php');
     $data = [];
-    $query = mysqli_query(openConn(), "SELECT * FROM pendaftaran ORDER BY id DESC");
+    $query = mysqli_query(openConn(), "SELECT * FROM `event` ORDER BY id DESC");
     while ($row=mysqli_fetch_array($query)){ $data[] = $row; }
+
+    $title = 'Add Event';
+    $event = [
+        'name' => null, 'tanggal' => null, 'id' => null, 'info' => null, 
+    ];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,32 +38,52 @@
 
     <div class="container">
         <a href="admin-logout.php" class="btn btn-primary">logout</a>
-        <a href="admin-data-event.php" class="btn btn-primary">Data Event</a>
+        <a href="admin-data-pendaftar.php" class="btn btn-primary">Data Pendaftar</a>
         <hr>
-        <h1>Data Pendaftar</h1>
+        <h1>Data Event</h1>
         <hr>
         <table class="table">
             <thead>
                 <tr>
                     <th>nama</th>
-                    <th>email</th>
-                    <th>tanggal lahir</th>
-                    <th>event</th>
-                    <th>event date</th>
+                    <th>tanggal</th>
+                    <th>info</th>
+                    <th>-</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($data as $key => $row) { ?>
                     <tr>
                         <td><?php echo $row['nama']; ?></td>
-                        <td><?php echo $row['email']; ?></td>
-                        <td><?php echo $row['tanggal_lahir']; ?></td>
-                        <td><?php echo $row['event']; ?></td>
-                        <td><?php echo $row['event_date']; ?></td>
+                        <td><?php echo $row['tanggal']; ?></td>
+                        <td><?php echo $row['info']; ?></td>
+                        <td>
+                            <a href="admin-data-event.php?action=editid=<?php echo $row['id'] ?>" class="btn btn-primary">Edit</a>
+                            <a href="admin-data-event.php?action=hapusid=<?php echo $row['id'] ?>" class="btn btn-primary">Hapus</a>
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Admin Login</h5>
+                <form method="POST">
+                    <div class="mb-3 row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10"><input type="email" name="email" class="form-control" id="staticEmail"></div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="staticPassword" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10"><input type="password" name="password" class="form-control" id="staticPassword"></div>
+                    </div>
+                    <div class="mb-3 row">
+                        <button class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
 </body>
