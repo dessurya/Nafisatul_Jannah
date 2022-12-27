@@ -8,14 +8,50 @@
     }
 
     include('open-conn.php');
-    $data = [];
-    $query = mysqli_query(openConn(), "SELECT * FROM `event` ORDER BY id DESC");
-    while ($row=mysqli_fetch_array($query)){ $data[] = $row; }
 
-    $title = 'Add Event';
-    $event = [
-        'name' => null, 'tanggal' => null, 'id' => null, 'info' => null, 
-    ];
+    if (isset($_POST['nama'])) {
+        $nama = $_POST['nama'];
+        $tanggal = $_POST['tanggal'];
+        $info = $_POST['info'];
+        $id = $_POST['id'];
+        if ($id == '' or $id == null) {
+            mysqli_query(openConn(), "INSERT INTO `event`
+            (nama,tanggal,info)
+            VALUES ('$nama','$tanggal','$info')");
+            $pesan = 'berhasil menambahkan event';
+        } else{
+            mysqli_query(openConn(), "UPDATE `event`
+            SET nama='$nama',tanggal='$tanggal',info='$info'
+            WHERE id = $id");
+            $pesan = 'berhasil menubah event';
+        }
+        $redirect = true;
+        $direct = 'admin-data-event.php';
+    }else{
+        $data = [];
+        $query = mysqli_query(openConn(), "SELECT * FROM `event` ORDER BY id DESC");
+        while ($row=mysqli_fetch_array($query)){ $data[] = $row; }
+    
+        $title = 'Add Event';
+        $event = [
+            'nama' => null, 'tanggal' => null, 'id' => null, 'info' => null, 
+        ];
+    
+        if (isset($_GET['action'])) {
+            $getId = $_GET['id'];
+            if ($_GET['action'] == 'edit') {
+                $query = mysqli_query(openConn(), "SELECT * FROM `event` WHERE id = $getId");
+                $event=mysqli_fetch_array($query);
+                $title = 'Update Event '.$event['nama'];
+            }else if ($_GET['action'] == 'hapus') {
+                $query = mysqli_query(openConn(), "DELETE FROM `event` WHERE id = $getId");
+                $pesan = 'berhasil menghapus event';
+                $redirect = true;
+                $direct = 'admin-data-event.php';
+            }
+        }
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,8 +94,8 @@
                         <td><?php echo $row['tanggal']; ?></td>
                         <td><?php echo $row['info']; ?></td>
                         <td>
-                            <a href="admin-data-event.php?action=editid=<?php echo $row['id'] ?>" class="btn btn-primary">Edit</a>
-                            <a href="admin-data-event.php?action=hapusid=<?php echo $row['id'] ?>" class="btn btn-primary">Hapus</a>
+                            <a href="admin-data-event.php?action=edit&id=<?php echo $row['id'] ?>" class="btn btn-primary">Edit</a>
+                            <a href="admin-data-event.php?action=hapus&id=<?php echo $row['id'] ?>" class="btn btn-primary">Hapus</a>
                         </td>
                     </tr>
                 <?php } ?>
@@ -68,17 +104,22 @@
 
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Admin Login</h5>
+                <h5 class="card-title"><?php echo $title; ?></h5>
                 <form method="POST">
                     <div class="mb-3 row">
-                        <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
-                        <div class="col-sm-10"><input type="email" name="email" class="form-control" id="staticEmail"></div>
+                        <label for="nama" class="col-sm-2 col-form-label">Nama</label>
+                        <div class="col-sm-10"><input required value="<?php echo $event['nama']; ?>" type="text" name="nama" class="form-control" id="nama"></div>
                     </div>
                     <div class="mb-3 row">
-                        <label for="staticPassword" class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10"><input type="password" name="password" class="form-control" id="staticPassword"></div>
+                        <label for="tanggal" class="col-sm-2 col-form-label">Tanggal</label>
+                        <div class="col-sm-10"><input required value="<?php echo $event['tanggal']; ?>" type="date" name="tanggal" class="form-control" id="tanggal"></div>
                     </div>
                     <div class="mb-3 row">
+                        <label for="info" class="col-sm-2 col-form-label">Info</label>
+                        <div class="col-sm-10"><input value="<?php echo $event['info']; ?>" type="text" name="info" class="form-control" id="info"></div>
+                    </div>
+                    <div class="mb-3 row">
+                        <input type="hidden" name="id" value="<?php echo $event['id'] ?>">
                         <button class="btn btn-info">Submit</button>
                     </div>
                 </form>
